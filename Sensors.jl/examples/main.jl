@@ -36,28 +36,26 @@ indexes = Sensors.mi(X, kernel, s)
 
 # benchmarking
 
-X = ColVecs(rand(rng, 3, 10000))
+X = ColVecs(rand(rng, 3, 10_000))
 s = 200
 
-Sensors.entropynaive(X, kernel, s)
 Profile.clear_malloc_data()
+Sensors.entropynaive(X, kernel, s)
+# Profile.print()
 @time Sensors.entropynaive(X, kernel, s)
 # @profile Sensors.entropynaive(X, kernel, s)
-# Profile.print()
 
-Sensors.entropy(X, kernel, s)
-Sensors.entropy(X, kernel, s)
 Profile.clear_malloc_data()
+Sensors.entropy(X, kernel, s)
 @time Sensors.entropy(X, kernel, s)
 
 X = ColVecs(rand(rng, 3, 1000))
 s = 100
 
-# Sensors.miprec(X, kernel, s)
 # Profile.clear_malloc_data()
+# Sensors.miprec(X, kernel, s)
 # @time Sensors.miprec(X, kernel, s)
 
-Sensors.mi(X, kernel, s)
 Profile.clear_malloc_data()
+Sensors.mi(X, kernel, s)
 @time Sensors.mi(X, kernel, s)
-
