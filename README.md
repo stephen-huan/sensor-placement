@@ -32,40 +32,40 @@ conditional mutual information with unselected points.
 
 ### entropy (n = 1000, s = 100)
 
-| method        | time (seconds)                              |
-| ------------- | ------------------------------------------- |
-| entropy naive | 0.030 ( 1.000)                              |
-| python prec   | 0.011 ( 2.801)                              |
-| python prchol | 0.014 ( 2.213)                              |
-| python chol   | 0.008 ( 3.613)                              |
-| cython chol   | 0.002 (15.417)                              |
-| julia         | 0.001 (20.718) (5 allocations: 798.047 KiB) |
+| method         | time (seconds)                                  |
+| -------------- | ----------------------------------------------- |
+| entropy naive  | 2.884e-02 ( 1.000)                              |
+| python prec    | 9.967e-03 ( 2.893)                              |
+| python prechol | 1.234e-02 ( 2.337)                              |
+| python chol    | 7.763e-03 ( 3.714)                              |
+| cython chol    | 1.481e-03 (19.473)                              |
+| julia          | 1.419e-03 (20.324) (5 allocations: 798.047 KiB) |
 
 ### mi (n = 100, s = 10)
 
-| method      | time (seconds)                                 |
-| ----------- | ---------------------------------------------- |
-| mi naive    | 0.003 ( 1.000)                                 |
-| python prec | 0.001 ( 2.334)                                 |
-| python chol | 0.005 ( 0.664)                                 |
-| julia       | 0.001 ( 3.597) (1.22 k allocations: 1.416 MiB) |
+| method      | time (seconds)                                    |
+| ----------- | ------------------------------------------------- |
+| mi naive    | 2.970e-03 (1.000)                                 |
+| python prec | 1.420e-03 (2.091)                                 |
+| python chol | 3.988e-03 (0.745)                                 |
+| julia       | 7.320e-04 (4.057) (1.22 k allocations: 1.416 MiB) |
 
 ### entropy (n = 10_000, s = 200)
 
-| method        | time (seconds)                             |
-| ------------- | ------------------------------------------ |
-| entropy naive | 1.812 ( 1.000)                             |
-| python prec   | 0.316 ( 5.738)                             |
-| python prchol | 0.325 ( 5.575)                             |
-| python chol   | 0.301 ( 6.020)                             |
-| cython chol   | 0.107 (16.870)                             |
-| julia         | 0.075 (24.319) (7 allocations: 15.413 MiB) |
+| method         | time (seconds)                                 |
+| -------------- | ---------------------------------------------- |
+| entropy naive  | 2.075e+00 ( 1.000)                             |
+| python prec    | 2.203e-01 ( 9.416)                             |
+| python prechol | 2.219e-01 ( 9.352)                             |
+| python chol    | 1.925e-01 (10.779)                             |
+| cython chol    | 7.852e-02 (26.423)                             |
+| julia          | 8.293e-02 (25.021) (7 allocations: 15.413 MiB) |
 
 ### mi (n = 1000, s = 100)
 
-| method      | time (seconds)                                                   |
-| ----------- | ---------------------------------------------------------------- |
-| mi naive    | 2.599 ( 1.000)                                                   |
-| python prec | 0.769 ( 3.378)                                                   |
-| python chol | 1.331 ( 1.953)                                                   |
-| julia       | 0.552 ( 4.707) (92.78 k allocations: 729.614 MiB, 3.28% gc time) |
+| method      | time (seconds)                                                      |
+| ----------- | ------------------------------------------------------------------- |
+| mi naive    | 2.929e+00 (1.000)                                                   |
+| python prec | 8.127e-01 (3.604)                                                   |
+| python chol | 1.329e+00 (2.203)                                                   |
+| julia       | 5.660e-01 (5.175) (92.78 k allocations: 729.614 MiB, 2.48% gc time) |
