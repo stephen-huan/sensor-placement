@@ -14,22 +14,21 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         python' = pkgs.python3.withPackages (ps: with ps; [
+          cython_3
           jax
           jaxlib
           matplotlib
           scikit-learn
+          setuptools
         ]);
         formatters = [ pkgs.black pkgs.isort ];
         linters = [ pkgs.nodePackages.pyright pkgs.ruff ];
       in
       {
-        devShells.${system}.default = (pkgs.mkShellNoCC.override {
-          stdenv = pkgs.stdenvNoCC.override {
-            initialPath = [ pkgs.coreutils ];
-          };
-        }) {
+        devShells.${system}.default = pkgs.mkShell {
           packages = [
             python'
+            # pkgs.mkl
           ]
           ++ formatters
           ++ linters;

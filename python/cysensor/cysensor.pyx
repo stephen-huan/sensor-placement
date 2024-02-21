@@ -4,7 +4,7 @@ cimport numpy as np
 import numpy as np
 cimport scipy.linalg.cython_blas as blas
 cimport scipy.linalg.cython_lapack as lapack
-cimport mkl
+from . cimport mkl
 from .c_kernels cimport Kernel, get_kernel, kernel_cleanup
 from .c_kernels cimport covariance_vector, variance_vector
 

@@ -5,7 +5,7 @@ from cpython.mem cimport PyMem_Malloc, PyMem_Free
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 cimport scipy.linalg.cython_blas as blas
-cimport mkl
+from . cimport mkl
 
 cdef (Kernel *) get_kernel(kernel_object: kernels.Kernel):
     """ Turn a Python scikit-learn kernel object into a C kernel struct. """
