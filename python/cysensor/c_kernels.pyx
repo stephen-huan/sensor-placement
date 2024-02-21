@@ -12,18 +12,22 @@ from . cimport mkl
 
 
 cdef (Kernel *) get_kernel(kernel_object: kernels.Kernel):
-    """ Turn a Python scikit-learn kernel object into a C kernel struct. """
+    """Turn a Python scikit-learn kernel object into a C kernel struct."""
     cdef Kernel *kernel
-    kernel = <Kernel *>PyMem_Malloc(sizeof(Kernel))
+    kernel = <Kernel *> PyMem_Malloc(sizeof(Kernel))
     # default to generic Python implementation
-    kernel.params = <void *>kernel_object
+    kernel.params = <void *> kernel_object
     kernel.kernel_function = &__python_covariance
     kernel.diag = &__python_variance
     # don't free a Python object (not malloc'd)
     kernel.cleanup = False
 
     # specialize to optimized C if possible
-    if isinstance(kernel_object, kernels.Matern):
+    if (
+        isinstance(kernel_object, kernels.Matern)
+        and not isinstance(kernel_object.length_scale, list)
+        and not isinstance(kernel_object.length_scale, np.ndarray)
+    ):
         kernel.params = __matern_params(kernel_object)
         kernel.kernel_function = &__matern_covariance
         kernel.diag = &__matern_variance
@@ -31,69 +35,97 @@ cdef (Kernel *) get_kernel(kernel_object: kernels.Kernel):
 
     return kernel
 
-cdef void covariance_vector(Kernel *kernel, double[:, ::1] points,
-                            double[::1] point, double *vector):
-    """ Covariance between each point in points and given point. """
+
+cdef void covariance_vector(
+    Kernel *kernel,
+    double[:, ::1] points,
+    double[::1] point,
+    double *vector,
+):
+    """Covariance between each point in points and given point."""
     kernel.kernel_function(kernel.params, points, point, vector)
 
-cdef void variance_vector(Kernel *kernel, double[:, ::1] points,
-                          double *vector):
-    """ Variance for each point in points. """
+
+cdef void variance_vector(
+    Kernel *kernel,
+    double[:, ::1] points,
+    double *vector,
+):
+    """Variance for each point in points."""
     kernel.diag(kernel.params, points, vector)
 
+
 cdef void kernel_cleanup(Kernel *kernel):
-    """ Free dynamically allocated memory. """
+    """Free dynamically allocated memory."""
     if kernel.cleanup:
         PyMem_Free(kernel.params)
     PyMem_Free(kernel)
 
+
 ### generic Python scikit-learn kernel
 
-cdef void __python_covariance(void *params, double[:, ::1] points,
-                              double[::1] point, double *vector):
-    """ Wrapper over a scikit-learn kernel object's __call__ method. """
+
+cdef void __python_covariance(
+    void *params,
+    double[:, ::1] points,
+    double[::1] point,
+    double *vector,
+):
+    """Wrapper over a scikit-learn kernel object's __call__ method."""
     cdef:
         object kernel
         double[:, :] cov
         int i
 
-    kernel = <object>(<PyObject *>params)
+    kernel = <object> (<PyObject *> params)
     cov = kernel(points, [point])
     for i in range(points.shape[0]):
         vector[i] = cov[i, 0]
 
-cdef void __python_variance(void *params, double[:, ::1] points,
-                            double *vector):
-    """ Wrapper over a scikit-learn kernel object's diag method. """
+
+cdef void __python_variance(
+    void *params,
+    double[:, ::1] points,
+    double *vector,
+):
+    """Wrapper over a scikit-learn kernel object's diag method."""
     cdef:
         object kernel
         double[:] var
         int i
 
-    kernel = <object>(<PyObject *>params)
+    kernel = <object> (<PyObject *> params)
     var = kernel.diag(points)
     for i in range(points.shape[0]):
         vector[i] = var[i]
 
+
 ### matern covariance
+
+cdef double SQRT3 = sqrt(3)
+cdef double SQRT5 = sqrt(5)
+
 
 cdef struct MaternParams:
     double nu
     double length_scale
 
+
 cdef (void *) __matern_params(kernel: kernels.Kernel):
+    """Intialize a MaternParams struct based on the given kernel."""
     cdef MaternParams *params_ptr
-    params_ptr = <MaternParams *>PyMem_Malloc(sizeof(MaternParams))
+    params_ptr = <MaternParams *> PyMem_Malloc(sizeof(MaternParams))
     params = kernel.get_params()
     params_ptr.nu = params["nu"]
     params_ptr.length_scale = params["length_scale"]
     return <void *>params_ptr
 
-cdef double SQRT3 = sqrt(3)
-cdef double SQRT5 = sqrt(5)
 
-cdef void __distance_vector(double[:, ::1] points, double[::1] point,
-                            double *vector):
+cdef void __distance_vector(
+    double[:, ::1] points,
+    double[::1] point,
+    double *vector,
+):
     """ Euclidean distance between each point in points and given point. """
     cdef:
         int n, i, j
@@ -113,8 +145,13 @@ cdef void __distance_vector(double[:, ::1] points, double[::1] point,
 
     mkl.vdSqrt(points.shape[0], vector, vector)
 
-cdef void __matern_covariance(void *params, double[:, ::1] points,
-                              double[::1] point, double *vector):
+
+cdef void __matern_covariance(
+    void *params,
+    double[:, ::1] points,
+    double[::1] point,
+    double *vector,
+):
     """ Matern covariance between each point in points and given point. """
     cdef:
         MaternParams *matern_params
@@ -138,7 +175,7 @@ cdef void __matern_covariance(void *params, double[:, ::1] points,
     alpha /= -length_scale
     incx = 1
     blas.dscal(&n, &alpha, vector, &incx)
-    u = <double *> PyMem_Malloc(n*sizeof(double))
+    u = <double *> PyMem_Malloc(n * sizeof(double))
     mkl.vdExp(n, vector, u)
 
     if nu == 0.5:
@@ -155,8 +192,12 @@ cdef void __matern_covariance(void *params, double[:, ::1] points,
 
     PyMem_Free(u)
 
-cdef void __matern_variance(void *params, double[:, ::1] points,
-                            double *vector):
+
+cdef void __matern_variance(
+    void *params,
+    double[:, ::1] points,
+    double *vector,
+):
     """ Matern variance for each point in points. """
     cdef int i
     for i in range(points.shape[0]):

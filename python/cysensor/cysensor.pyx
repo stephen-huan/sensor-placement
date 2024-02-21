@@ -18,7 +18,7 @@ from .c_kernels cimport (
 
 
 cdef int __argmax(double[::1] x):
-    """ Get the index corresponding to the largest (positive) value of x. """
+    """Get the index corresponding to the largest (positive) value of x."""
     cdef:
         int i, k
         double v, best
@@ -30,10 +30,12 @@ cdef int __argmax(double[::1] x):
             k, best = i, v
     return k
 
+
 ### selection methods
 
+
 cdef void __chol_update(double[::1, :] L, int i, int k):
-    """ Updates the ith column of the Cholesky factor L with column k. """
+    """Updates the ith column of the Cholesky factor L with column k."""
     cdef:
         char *trans
         int M, N, lda, incx, incy, j
@@ -58,8 +60,9 @@ cdef void __chol_update(double[::1, :] L, int i, int k):
     alpha = 1/sqrt(L[k, i])
     blas.dscal(&M, &alpha, y, &incy)
 
+
 cdef long[::1] __entropy_chol(double[:, ::1] x, Kernel *kernel, int s):
-    """ Returns a list of the most entropic points in x greedily. """
+    """Returns a list of the most entropic points in x greedily."""
     cdef:
         int n, i, j, k
         double v
@@ -85,16 +88,18 @@ cdef long[::1] __entropy_chol(double[:, ::1] x, Kernel *kernel, int s):
         # update conditional variance
         for j in range(n):
             v = L[j, i]
-            cond_var[j] -= v*v
+            cond_var[j] -= v * v
         # clear out selected index
         cond_var[k] = -1
 
     return indexes
 
+
 ### wrapper functions
 
+
 def entropy_chol(double[:, ::1] x, kernel_object, int s) -> np.ndarray:
-    """ Returns a list of the most entropic points in x greedily. """
+    """Returns a list of the most entropic points in x greedily."""
     cdef Kernel *kernel = get_kernel(kernel_object)
     selected = __entropy_chol(x, kernel, s)
     kernel_cleanup(kernel)
