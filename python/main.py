@@ -191,53 +191,53 @@ if __name__ == "__main__":
 
     # benchmarking
 
-    X = rng.random((1000, 3))
-    s = 100
+    X = rng.random((10000, 3))
+    s = 200
 
     # entropy
 
     start = time.time()
     indexes = sensor.entropy_naive(X, kernel, s)
     t1 = t2 = time.time() - start
-    print(f"entropy   naive: {t1:6.3f} ({t1/t1:7.3f})")
+    print(f"entropy   naive: {t1:9.3e} ({t1/t1:7.3f})")
 
     start = time.time()
     indexes = sensor.entropy_prec(X, kernel, s)
     # t1 = t2 = time.time() - start
     t2 = time.time() - start
-    print(f"python     prec: {t2:6.3f} ({t1/t2:7.3f})")
+    print(f"python     prec: {t2:9.3e} ({t1/t2:7.3f})")
 
     start = time.time()
     indexes = sensor.entropy_prechol(X, kernel, s)
     t2 = time.time() - start
-    print(f"python  prechol: {t2:6.3f} ({t1/t2:7.3f})")
+    print(f"python  prechol: {t2:9.3e} ({t1/t2:7.3f})")
 
     start = time.time()
     indexes = sensor.entropy_chol(X, kernel, s)
     t2 = time.time() - start
-    print(f"python     chol: {t2:6.3f} ({t1/t2:7.3f})")
+    print(f"python     chol: {t2:9.3e} ({t1/t2:7.3f})")
 
     start = time.time()
     indexes = cysensor.entropy_chol(X, kernel, s)
     t2 = time.time() - start
-    print(f"cython     chol: {t2:6.3f} ({t1/t2:7.3f})")
+    print(f"cython     chol: {t2:9.3e} ({t1/t2:7.3f})")
 
     # mutual information
 
-    X = rng.random((100, 3))
-    s = 10
+    X = rng.random((1000, 3))
+    s = 100
 
     start = time.time()
     indexes = sensor.mi_naive(X, kernel, s)
     t1 = t2 = time.time() - start
-    print(f"mi        naive: {t1:6.3f} ({t1/t1:7.3f})")
+    print(f"mi        naive: {t1:9.3e} ({t1/t1:7.3f})")
 
     start = time.time()
     indexes = sensor.mi_prec(X, kernel, s)
     t2 = time.time() - start
-    print(f"python     prec: {t2:6.3f} ({t1/t2:7.3f})")
+    print(f"python     prec: {t2:9.3e} ({t1/t2:7.3f})")
 
     start = time.time()
     indexes = sensor.mi_chol(X, kernel, s)
     t2 = time.time() - start
-    print(f"python     chol: {t2:6.3f} ({t1/t2:7.3f})")
+    print(f"python     chol: {t2:9.3e} ({t1/t2:7.3f})")
