@@ -81,7 +81,7 @@ if __name__ == "__main__":
     mi = sensor.mi_naive(X, kernel, s)
 
     # plt.style.available for available themes
-    plt.style.use("seaborn-paper")
+    plt.style.use("seaborn-v0_8-paper")
 
     plt.scatter(X[:, 0], X[:, 1], label="candidates",
                 zorder=1, s=POINT_SIZE, color=silver)
