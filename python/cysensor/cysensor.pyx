@@ -1,12 +1,21 @@
 # cython: profile=False
-from libc.math cimport sqrt
 cimport numpy as np
+from libc.math cimport sqrt
+
 import numpy as np
+
 cimport scipy.linalg.cython_blas as blas
 cimport scipy.linalg.cython_lapack as lapack
+
 from . cimport mkl
-from .c_kernels cimport Kernel, get_kernel, kernel_cleanup
-from .c_kernels cimport covariance_vector, variance_vector
+from .c_kernels cimport (
+    Kernel,
+    covariance_vector,
+    get_kernel,
+    kernel_cleanup,
+    variance_vector,
+)
+
 
 cdef int __argmax(double[::1] x):
     """ Get the index corresponding to the largest (positive) value of x. """
@@ -90,4 +99,3 @@ def entropy_chol(double[:, ::1] x, kernel_object, int s) -> np.ndarray:
     selected = __entropy_chol(x, kernel, s)
     kernel_cleanup(kernel)
     return np.asarray(selected)
-

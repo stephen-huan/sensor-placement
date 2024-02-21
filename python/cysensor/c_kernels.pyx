@@ -1,11 +1,15 @@
 # cython: profile=False
-from libc.math cimport sqrt, exp
+from cpython.mem cimport PyMem_Free, PyMem_Malloc
 from cpython.ref cimport PyObject
-from cpython.mem cimport PyMem_Malloc, PyMem_Free
+from libc.math cimport exp, sqrt
+
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
+
 cimport scipy.linalg.cython_blas as blas
+
 from . cimport mkl
+
 
 cdef (Kernel *) get_kernel(kernel_object: kernels.Kernel):
     """ Turn a Python scikit-learn kernel object into a C kernel struct. """
@@ -158,4 +162,3 @@ cdef void __matern_variance(void *params, double[:, ::1] points,
     for i in range(points.shape[0]):
         # Matern kernels have covariance one between a point and itself
         vector[i] = 1
-

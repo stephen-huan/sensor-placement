@@ -1,4 +1,1 @@
-from .cysensor import (
-    entropy_chol,
-)
-
+from .cysensor import entropy_chol
