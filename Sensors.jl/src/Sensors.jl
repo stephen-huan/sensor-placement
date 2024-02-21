@@ -10,10 +10,14 @@ module Sensors
 
 export entropynaive, entropy, miprec, mi
 
-using PyPrint: pprint, @pprint
 using LinearAlgebra: LinearAlgebra, Cholesky, mul!
+
+using PyPrint: pprint, @pprint
 using KernelFunctions:
-    kernelmatrix, kernelmatrix!, kernelmatrix_diag, kernelmatrix_diag!
+    kernelmatrix,
+    kernelmatrix!,
+    kernelmatrix_diag,
+    kernelmatrix_diag!
 
 """
     pddot(theta, x)

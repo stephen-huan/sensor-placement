@@ -1,6 +1,8 @@
 using Test: @testset, @test
 using Random: Random, rand
+
 using KernelFunctions: KernelFunctions as Kernels, ColVecs
+
 using Sensors: Sensors
 
 Random.seed!(1)

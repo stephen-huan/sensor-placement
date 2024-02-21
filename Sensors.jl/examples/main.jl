@@ -1,11 +1,13 @@
 using Random: Random, rand
 using StaticArrays: StaticArrays
 using Profile: Profile, @profile
+
 using BenchmarkTools: @benchmark, @btime
 # using PProf: PProf, pprof
 using PyPrint: pprint, @pprint
 using NPZ: npzread
 using KernelFunctions: KernelFunctions as Kernels, ColVecs
+
 using Sensors: Sensors
 
 rng = Random.seed!(1)
