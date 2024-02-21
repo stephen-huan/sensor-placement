@@ -1,0 +1,10 @@
+__pycache__/
+# conda virtual environment
+venv/
+# Cython build artifacts
+build/
+*.so
+*.c
+*.html
+# images
+*.png

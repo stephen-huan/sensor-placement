@@ -1,0 +1,11 @@
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+KernelFunctions = "ec8451be-7e33-11e9-00cf-bbf324bd1392"
+NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
+PProf = "e4faabce-9ead-11e9-39d9-4379958e3056"
+Profile = "9abbd945-dff8-562f-b5e8-e1ebf5ef1b79"
+PyPrint = "302eade5-f262-4753-bf72-f2441e1ae844"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Sensors = "c235fb5a-a6ce-41e0-a9ba-35e076e5d609"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
