@@ -4,7 +4,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
-import cysensor
+try:
+    import cysensor
+
+    cython = True
+except ImportError:
+    cython = False
+
 import pysensor as sensor
 
 # fmt: off
@@ -68,8 +74,9 @@ if __name__ == "__main__":
     assert np.allclose(ans, indexes), "python prechol entropy wrong"
     indexes = sensor.entropy_chol(X, kernel, s)
     assert np.allclose(ans, indexes), "python chol    entropy wrong"
-    indexes = cysensor.entropy_chol(X, kernel, s)
-    assert np.allclose(ans, indexes), "cython chol    entropy wrong"
+    if cython:
+        indexes = cysensor.entropy_chol(X, kernel, s)  # pyright: ignore
+        assert np.allclose(ans, indexes), "cython chol    entropy wrong"
 
     np.save("data/entropy_X.npy", X)
     np.save("data/entropy_indexes.npy", indexes)
@@ -217,10 +224,13 @@ if __name__ == "__main__":
     t2 = time.time() - start
     print(f"python     chol: {t2:9.3e} ({t1/t2:7.3f})")
 
-    start = time.time()
-    indexes = cysensor.entropy_chol(X, kernel, s)
-    t2 = time.time() - start
-    print(f"cython     chol: {t2:9.3e} ({t1/t2:7.3f})")
+    if cython:
+        start = time.time()
+        indexes = cysensor.entropy_chol(X, kernel, s)  # pyright: ignore
+        t2 = time.time() - start
+        print(f"cython     chol: {t2:9.3e} ({t1/t2:7.3f})")
+    else:
+        print("skipping cython...")
 
     # mutual information
 
