@@ -1,4 +1,4 @@
-# sensor
+# sensor-placement
 
 Information-theoretic sensor placement [1]
 implemented in Python, Cython, JAX, and Julia.
@@ -9,17 +9,88 @@ Studies," J. Mach. Learn. Res., vol. 9, pp. 235–284, Jun. 2008.
 
 ## Installation
 
+### Python
+
+The Python dependencies are installed with Nix.
+
+Navigate to the `python` directory and run
+
+```bash
+nix develop
+```
+
+### Cython
+
 The Cython implementation relies on Intel's oneMKL library which is unfree.
 
-Uncomment `pkgs.mkl` in `python/flake.nix` and run
+Navigate to the `python` directory and uncomment `pkgs.mkl` in `flake.nix`. Run
 
 ```bash
 NIXPKGS_ALLOW_UNFREE=1 nix develop --impure
 python setup.py build_ext --inplace
 ```
 
-to compile the Cython extensions. MKL can be
-disabled once the compilation is complete.
+to compile the Cython extensions.
+
+### JAX
+
+JAX on CPU is automatically installed with the Python dependencies.
+
+For GPU support, create a Conda environment with
+[micromamba](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html)
+from the explicitly pinned dependencies with
+
+```bash
+micromamba create -y --prefix ./.venv -f linux-64-spec-list.txt
+eval "$(micromamba shell hook)"
+micromamba activate ./.venv
+pip install --requirement requirements.txt
+```
+
+from the `python` directory. Note that this requires a x86-64 Linux system.
+
+Alternatively, create from the environment specification with
+
+```bash
+micromamba create --prefix ./.venv -f environment.yml
+eval "$(micromamba shell hook)"
+micromamba activate ./.venv
+```
+
+This is up-to-date and works on more platforms but
+the resolved dependencies may not work as expected.
+
+### Julia
+
+Installation is done using the standard `Pkg` interface.
+
+Navigate to the `Sensors.jl/examples` directory and run
+
+```bash
+julia --project="@."
+```
+
+```julia
+(examples) pkg> instantiate
+```
+
+## Running
+
+### Python, Cython, and JAX
+
+Navigate to the `python` directory and run
+
+```bash
+python main.py
+```
+
+### Julia
+
+Navigate to the `Sensors.jl/examples` directory and run
+
+```bash
+julia --project="@." main.jl
+```
 
 ## Benchmarks
 
