@@ -19,12 +19,15 @@
           jaxlib
           matplotlib
           scikit-learn
+          self.packages.${system}.gpjax
           setuptools
         ]);
         formatters = [ pkgs.black pkgs.isort ];
         linters = [ pkgs.nodePackages.pyright pkgs.ruff ];
       in
       {
+        packages.${system} = import ./pkgs { inherit pkgs; };
+
         devShells.${system}.default = pkgs.mkShell {
           packages = [
             python'
