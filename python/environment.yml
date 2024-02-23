@@ -1,0 +1,12 @@
+name: sensor-placement
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10,<3.12
+  - dm-tree>=0.1.8
+  - rich # `visualize_sharding` requires `rich` to be installed
+  - pip>=23.3.2
+  - pip:
+    - -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+    - jax[cuda11_pip]>=0.4.21
+    - gpjax>=0.8.0

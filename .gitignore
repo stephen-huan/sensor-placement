@@ -2,7 +2,7 @@
 result
 __pycache__/
 # conda virtual environment
-venv/
+.venv/
 # Cython build artifacts
 build/
 *.so
