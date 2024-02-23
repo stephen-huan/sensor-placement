@@ -1,8 +1,14 @@
 import time
 
+import jax
+import jax.numpy as jnp
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
+from gpjax import kernels as jaxkernels
+
+import jaxsensor
+import pysensor as sensor
 
 try:
     import cysensor
@@ -11,7 +17,8 @@ try:
 except ImportError:
     cython = False
 
-import pysensor as sensor
+# enable int64/float64
+jax.config.update("jax_enable_x64", True)
 
 # fmt: off
 lightblue     = "#a1b4c7"
@@ -62,6 +69,7 @@ if __name__ == "__main__":
     rng = np.random.default_rng(1)
 
     kernel = kernels.Matern(length_scale=1, nu=5 / 2)
+    jaxkernel = jaxkernels.Matern52(lengthscale=1)
     X = rng.random((100, 2))
     s = 75
 
@@ -69,14 +77,16 @@ if __name__ == "__main__":
 
     ans = sensor.entropy_naive(X, kernel, s)
     indexes = sensor.entropy_prec(X, kernel, s)
-    assert np.allclose(ans, indexes), "python prec    entropy wrong"
+    assert np.allclose(ans, indexes), "python entropy prec wrong"
     indexes = sensor.entropy_prechol(X, kernel, s)
-    assert np.allclose(ans, indexes), "python prechol entropy wrong"
+    assert np.allclose(ans, indexes), "python entropy prechol wrong"
     indexes = sensor.entropy_chol(X, kernel, s)
-    assert np.allclose(ans, indexes), "python chol    entropy wrong"
+    assert np.allclose(ans, indexes), "python entropy chol wrong"
     if cython:
         indexes = cysensor.entropy_chol(X, kernel, s)  # pyright: ignore
-        assert np.allclose(ans, indexes), "cython chol    entropy wrong"
+        assert np.allclose(ans, indexes), "cython entropy chol wrong"
+    indexes = jaxsensor.entropy(X, jaxkernel, s)
+    assert jnp.allclose(ans, indexes), "jax entropy wrong"
 
     np.save("data/entropy_X.npy", X)
     np.save("data/entropy_indexes.npy", indexes)
@@ -86,6 +96,8 @@ if __name__ == "__main__":
     assert np.allclose(ans, indexes), "python mi prec wrong"
     indexes = sensor.mi_chol(X, kernel, s)
     assert np.allclose(ans, indexes), "python mi chol wrong"
+    indexes = jaxsensor.mi(X, jaxkernel, s)
+    assert jnp.allclose(ans, indexes), "jax mi wrong"
 
     np.save("data/mi_X.npy", X)
     np.save("data/mi_indexes.npy", indexes)
@@ -198,7 +210,7 @@ if __name__ == "__main__":
 
     # benchmarking
 
-    X = rng.random((10000, 3))
+    X = rng.random((10_000, 3))
     s = 200
 
     # entropy
@@ -223,6 +235,12 @@ if __name__ == "__main__":
     indexes = sensor.entropy_chol(X, kernel, s)
     t2 = time.time() - start
     print(f"python     chol: {t2:9.3e} ({t1/t2:7.3f})")
+
+    indexes = jaxsensor.entropy(X, jaxkernel, s).block_until_ready()
+    start = time.time()
+    indexes = jaxsensor.entropy(X, jaxkernel, s).block_until_ready()
+    t2 = time.time() - start
+    print(f"jax            : {t2:9.3e} ({t1/t2:7.3f})")
 
     if cython:
         start = time.time()
@@ -251,3 +269,9 @@ if __name__ == "__main__":
     indexes = sensor.mi_chol(X, kernel, s)
     t2 = time.time() - start
     print(f"python     chol: {t2:9.3e} ({t1/t2:7.3f})")
+
+    indexes = jaxsensor.mi(X, jaxkernel, s).block_until_ready()
+    start = time.time()
+    indexes = jaxsensor.mi(X, jaxkernel, s).block_until_ready()
+    t2 = time.time() - start
+    print(f"jax            : {t2:9.3e} ({t1/t2:7.3f})")
