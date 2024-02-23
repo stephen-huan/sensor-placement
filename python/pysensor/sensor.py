@@ -176,7 +176,7 @@ def entropy_chol(X: np.ndarray, kernel: Kernel, s: int) -> np.ndarray:
 # simple improvement to Algorithm 1 in the Krause paper
 
 
-def mi_naive(X: np.ndarray, kernel: Kernel, s: int) -> list:
+def mi_naive(X: np.ndarray, kernel: Kernel, s: int) -> np.ndarray:
     """Max mutual information between selected and non-selected points."""
     # O(s*(s^3 + n*n^3)) = O(n^4 s)
     n = len(X)
@@ -196,7 +196,7 @@ def mi_naive(X: np.ndarray, kernel: Kernel, s: int) -> list:
         indexes.append(k)
         candidates.remove(k)  # type: ignore
 
-    return indexes
+    return np.array(indexes)
 
 
 def mi_prec(X: np.ndarray, kernel: Kernel, s: int) -> np.ndarray:
