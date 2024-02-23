@@ -5,6 +5,7 @@ dependencies:
   - python>=3.10,<3.12
   - dm-tree>=0.1.8
   - rich # `visualize_sharding` requires `rich` to be installed
+  - scikit-learn>=1.4.1
   - pip>=23.3.2
   - pip:
     - -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
