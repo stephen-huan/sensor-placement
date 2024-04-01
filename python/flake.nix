@@ -30,6 +30,7 @@
 
         devShells.${system}.default = pkgs.mkShell {
           packages = [
+            pkgs.nix-update
             python'
             # pkgs.mkl
           ]
