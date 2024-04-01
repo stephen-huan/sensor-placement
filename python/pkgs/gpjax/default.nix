@@ -20,33 +20,29 @@
 
 buildPythonPackage rec {
   pname = "gpjax";
-  version = "0.8.0";
+  version = "0.8.2";
 
   # PyPi source doesn't contain tests
   src = fetchFromGitHub {
     owner = "JaxGaussianProcesses";
     repo = "GPJax";
     rev = "v${version}";
-    sha256 = "sha256-s4ERd8qf2RsGX/EYfNxRklZKx9JtTKwXzQipAtIkHC8=";
+    sha256 = "sha256-2mjmKyPEplO5OAH8Ea7UYKxSSmb1Osk/d6RUR/9JkU8=";
   };
 
   format = "pyproject";
 
-  patches = [
-    # https://github.com/JaxGaussianProcesses/GPJax/pull/437
-    ./test_gps.patch
-  ];
-
   postPatch = ''
     substituteInPlace pyproject.toml \
       --replace \
-        'tensorflow-probability = "^0.19.0"' \
-        'tensorflow-probability = ">=0.19.0"'
-
-    substituteInPlace gpjax/fit.py \
+        'optax = "^0.1.4"' \
+        'optax = ">=0.1.4"' \
       --replace \
-        '_check_prng_key(key)' \
-        '_check_prng_key("fit", key)'
+        'tensorflow-probability = "^0.22.0"' \
+        'tensorflow-probability = ">=0.21.0"' \
+      --replace \
+        'beartype = "^0.16.2"' \
+        'beartype = ">=0.16.2"'
   '';
 
   nativeBuildInputs = [
