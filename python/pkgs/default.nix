@@ -1,8 +1,8 @@
 { pkgs }:
 
 pkgs.python3Packages.overrideScope (final: prev: rec {
-  cola-ml = final.callPackage ./cola-ml { };
   chex = final.callPackage ./chex { };
+  cola-ml = final.callPackage ./cola-ml { };
   cola-plum-dispatch = final.callPackage ./cola-plum-dispatch { };
   flax = final.callPackage ./flax { };
   gpjax = final.callPackage ./gpjax { simple-pytree = simple-pytree_0_1_7; };
