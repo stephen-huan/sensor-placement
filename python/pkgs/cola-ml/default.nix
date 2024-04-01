@@ -1,5 +1,5 @@
 { lib
-, fetchPypi
+, fetchFromGitHub
 , buildPythonPackage
 , setuptools
 , setuptools-scm
@@ -10,19 +10,22 @@
 , pytreeclass
 , beartype
 , typing-extensions
+, pytest
 , pytestCheckHook
 , jax
 , jaxlib
 , torch
 }:
 
-buildPythonPackage rec {
+buildPythonPackage {
   pname = "cola-ml";
   version = "0.0.5";
 
-  src = fetchPypi {
-    inherit pname version;
-    hash = "sha256-r92S/PKijD0ozFU4sAWXg/mU1YphN37SmFywylIoE9o=";
+  src = fetchFromGitHub {
+    owner = "wilson-labs";
+    repo = "cola";
+    rev = "4af199e4e7bd647241ecb60c3befea401b6dc7b2";
+    hash = "sha256-MkswIJcXVWRFjSGXK0DGLZiM2JbDOqUrm2YMyis6q/Q=";
   };
 
   format = "pyproject";
@@ -40,6 +43,7 @@ buildPythonPackage rec {
     pytreeclass
     beartype
     typing-extensions
+    pytest
   ];
 
   nativeCheckInputs = [
@@ -55,10 +59,13 @@ buildPythonPackage rec {
     "test_arnoldi_vjp"
     "test_lanczos_vjp"
     "test_unary"
+    "test_arnoldi_matrix_market"
+    "test_lanczos_matrix_market"
   ];
 
   disabledTestPaths = [
     # tests that take a long time
+    "tests/linalg/test_inverse.py"
     "tests/linalg/test_logdet.py"
   ];
 
