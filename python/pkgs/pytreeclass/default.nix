@@ -45,6 +45,6 @@ buildPythonPackage rec {
     description = "Visualize, create, and operate on pytrees";
     homepage = "https://pytreeclass.readthedocs.io/en/latest";
     license = licenses.asl20;
-    maintainers = with maintainers; [ stephen-huan ];
+    maintainers = [ ];
   };
 }

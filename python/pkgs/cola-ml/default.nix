@@ -77,6 +77,6 @@ buildPythonPackage {
     description = "Compositional Linear Algebra";
     homepage = "https://cola.readthedocs.io/en/latest/";
     license = licenses.asl20;
-    maintainers = with maintainers; [ stephen-huan ];
+    maintainers = [ ];
   };
 }

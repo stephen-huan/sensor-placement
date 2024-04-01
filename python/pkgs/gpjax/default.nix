@@ -82,6 +82,6 @@ buildPythonPackage rec {
     description = "Gaussian processes in JAX";
     homepage = "https://docs.jaxgaussianprocesses.com";
     license = licenses.asl20;
-    maintainers = with maintainers; [ stephen-huan ];
+    maintainers = [ ];
   };
 }
