@@ -1,11 +1,13 @@
 { pkgs }:
 
-pkgs.python3Packages.overrideScope (final: prev: rec {
+pkgs.python3Packages.overrideScope (final: prev: {
   chex = final.callPackage ./chex { };
   cola-ml = final.callPackage ./cola-ml { };
   cola-plum-dispatch = final.callPackage ./cola-plum-dispatch { };
   flax = final.callPackage ./flax { };
-  gpjax = final.callPackage ./gpjax { simple-pytree = simple-pytree_0_1_7; };
+  gpjax = final.callPackage ./gpjax {
+    simple-pytree = final.simple-pytree_0_1_7;
+  };
   optax = final.callPackage ./optax { };
   optree = final.callPackage ./optree { };
   # see tensorflow-build in pkgs/top-level/python-packages.nix
@@ -20,7 +22,7 @@ pkgs.python3Packages.overrideScope (final: prev: rec {
   };
   pytreeclass = final.callPackage ./pytreeclass { };
   simple-pytree = final.callPackage ./simple-pytree { };
-  simple-pytree_0_1_7 = simple-pytree.overridePythonAttrs rec {
+  simple-pytree_0_1_7 = final.simple-pytree.overridePythonAttrs rec {
     version = "0.1.7";
     src = pkgs.fetchFromGitHub {
       owner = "cgarciae";
