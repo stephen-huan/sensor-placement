@@ -25,14 +25,14 @@
 
 let flax = buildPythonPackage rec {
   pname = "flax";
-  version = "0.7.5";
+  version = "0.8.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "google";
     repo = "flax";
     rev = "refs/tags/v${version}";
-    hash = "sha256-NDah0ayQbiO1/sTU1DDf/crPq5oLTnSuosV7cFHlTM8=";
+    hash = "sha256-UABgJGe1grUSkwOJpjeIoFqhXsqG//HlC1YyYPxXV+g=";
   };
 
   nativeBuildInputs = [
