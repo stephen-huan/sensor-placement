@@ -1,5 +1,5 @@
 {
-  description = "sensor";
+  description = "sensor-placement";
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
