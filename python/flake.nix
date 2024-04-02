@@ -24,8 +24,8 @@
           scikit-learn
           setuptools
         ]);
-        formatters = [ pkgs.black pkgs.isort ];
-        linters = [ pkgs.nodePackages.pyright pkgs.ruff ];
+        formatters = [ pkgs.black pkgs.isort pkgs.nixpkgs-fmt ];
+        linters = [ pkgs.nodePackages.pyright pkgs.ruff pkgs.statix ];
       in
       {
         legacyPackages.${system} = rec {
@@ -45,6 +45,32 @@
             optree
             pytreeclass
             simple-pytree;
+        };
+
+        formatter.${system} = pkgs.writeShellApplication {
+          name = "formatter";
+          runtimeInputs = formatters;
+          text = ''
+            isort "$@"
+            black "$@"
+            nixpkgs-fmt "$@"
+          '';
+        };
+
+        checks.${system}.lint = pkgs.stdenvNoCC.mkDerivation {
+          name = "lint";
+          src = ./.;
+          doCheck = true;
+          nativeCheckInputs = formatters ++ linters ++ lib.singleton python';
+          checkPhase = ''
+            isort --check --diff .
+            black --check --diff .
+            nixpkgs-fmt --check .
+            ruff check .
+            pyright .
+            statix check
+          '';
+          installPhase = "touch $out";
         };
 
         devShells.${system}.default = pkgs.mkShell {
