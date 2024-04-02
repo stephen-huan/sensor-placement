@@ -4,16 +4,19 @@ pkgs.python3Packages.overrideScope (final: prev: {
   chex = final.callPackage ./chex { };
   cola-ml = final.callPackage ./cola-ml { };
   cola-plum-dispatch = final.callPackage ./cola-plum-dispatch { };
-  flax = final.callPackage ./flax { };
+  # https://github.com/NixOS/nixpkgs/pull/297146
+  flax = prev.flax.overridePythonAttrs (previousAttrs: {
+    disabledTestPaths = previousAttrs.disabledTestPaths or [ ] ++ [
+      "flax/experimental/nnx/examples/*"
+    ];
+  });
   gpjax = final.callPackage ./gpjax {
     simple-pytree = final.simple-pytree_0_1_7;
   };
   optax = final.callPackage ./optax { };
   optree = final.callPackage ./optree { };
   # see tensorflow-build in pkgs/top-level/python-packages.nix
-  orbax-checkpoint = (
-    final.callPackage ./orbax-checkpoint { }
-  ).override {
+  orbax-checkpoint = prev.orbax-checkpoint.override {
     protobuf = pkgs.python3Packages.protobuf.override {
       protobuf = pkgs.protobuf_21.override {
         abseil-cpp = pkgs.abseil-cpp_202301;

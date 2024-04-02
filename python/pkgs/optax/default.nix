@@ -1,4 +1,4 @@
-# pkgs/development/python-modules/optax/default.nix
+# https://github.com/NixOS/nixpkgs/pull/297146
 { lib
 , absl-py
 , buildPythonPackage
