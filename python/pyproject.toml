@@ -1,5 +1,6 @@
 [tool.pyright]
-exclude = [".direnv"]
+exclude = [".direnv", "result"]
+ignore = ["cysensor/__init__.py"]
 root = "."
 
 [tool.ruff]
@@ -11,3 +12,4 @@ line-length = 79
 [tool.isort]
 profile = "black"
 line_length = 79
+extend_skip = ["result"]
