@@ -13,20 +13,39 @@
     eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        python' = pkgs.python3.withPackages (ps: with ps; [
+        packages = import ./pkgs { inherit pkgs; };
+        inherit (self.legacyPackages.${system}) python;
+        python' = python.withPackages (ps: with ps; [
           cython_3
+          gpjax
           jax
           jaxlib
           matplotlib
           scikit-learn
-          self.packages.${system}.gpjax
           setuptools
         ]);
         formatters = [ pkgs.black pkgs.isort ];
         linters = [ pkgs.nodePackages.pyright pkgs.ruff ];
       in
       {
-        packages.${system} = import ./pkgs { inherit pkgs; };
+        legacyPackages.${system} = rec {
+          # https://nixos.org/manual/nixpkgs/stable/#overriding-python-packages
+          python = packages.python.override {
+            packageOverrides = final: prev: packages;
+            self = python;
+          };
+          python3Packages = packages // { inherit python; };
+        };
+
+        packages.${system} = {
+          inherit (packages)
+            cola-ml
+            cola-plum-dispatch
+            gpjax
+            optree
+            pytreeclass
+            simple-pytree;
+        };
 
         devShells.${system}.default = pkgs.mkShell {
           packages = [
