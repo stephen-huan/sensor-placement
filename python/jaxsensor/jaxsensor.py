@@ -23,9 +23,11 @@ def index_dtype(x: Array, unsigned: bool = True):
     """Return the smallest integer datatype that can represent indices in x."""
     max_value = lambda dtype: jnp.iinfo(dtype).max  # noqa: E731
     dtypes = sorted(
-        [jnp.uint8, jnp.uint16, jnp.uint32, jnp.uint64]
-        if unsigned
-        else [jnp.int8, jnp.int16, jnp.int32, jnp.int64],
+        (
+            [jnp.uint8, jnp.uint16, jnp.uint32, jnp.uint64]
+            if unsigned
+            else [jnp.int8, jnp.int16, jnp.int32, jnp.int64]
+        ),
         key=max_value,
     )
     sizes = list(map(max_value, dtypes))
