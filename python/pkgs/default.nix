@@ -1,15 +1,8 @@
 { pkgs }:
 
 pkgs.python3Packages.overrideScope (final: prev: {
-  chex = final.callPackage ./chex { };
   cola-ml = final.callPackage ./cola-ml { };
   cola-plum-dispatch = final.callPackage ./cola-plum-dispatch { };
-  # https://github.com/NixOS/nixpkgs/pull/297146
-  flax = prev.flax.overridePythonAttrs (previousAttrs: {
-    disabledTestPaths = previousAttrs.disabledTestPaths or [ ] ++ [
-      "flax/experimental/nnx/examples/*"
-    ];
-  });
   gpjax = final.callPackage ./gpjax {
     simple-pytree = final.simple-pytree.overridePythonAttrs rec {
       version = "0.1.7";
@@ -21,7 +14,6 @@ pkgs.python3Packages.overrideScope (final: prev: {
       };
     };
   };
-  optax = final.callPackage ./optax { };
   optree = final.callPackage ./optree { };
   # see tensorflow-build in pkgs/top-level/python-packages.nix
   orbax-checkpoint = prev.orbax-checkpoint.override {
