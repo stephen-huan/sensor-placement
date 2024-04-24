@@ -16,7 +16,7 @@
         packages = import ./pkgs { inherit pkgs; };
         inherit (self.legacyPackages.${system}) python;
         python' = python.withPackages (ps: with ps; [
-          cython_3
+          cython
           gpjax
           jax
           jaxlib
