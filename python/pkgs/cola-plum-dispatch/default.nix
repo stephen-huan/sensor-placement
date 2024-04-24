@@ -63,7 +63,7 @@ buildPythonPackage {
   meta = with lib; {
     description = "Multiple dispatch in Python";
     homepage = "https://github.com/mfinzi/plum";
-    license = lib.licenses.mit;
+    license = licenses.mit;
     maintainers = with maintainers; [ stephen-huan ];
   };
 }
