@@ -46,6 +46,6 @@ buildPythonPackage rec {
     description = "Simple package for creating custom JAX pytree objects";
     homepage = "https://github.com/cgarciae/simple-pytree";
     license = licenses.mit;
-    maintainers = [ ];
+    maintainers = with maintainers; [ stephen-huan ];
   };
 }

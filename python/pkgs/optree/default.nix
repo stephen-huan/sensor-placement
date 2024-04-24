@@ -62,6 +62,6 @@ buildPythonPackage rec {
     description = "OpTree: Optimized PyTree Utilities";
     homepage = "https://optree.readthedocs.io/en/latest";
     license = licenses.asl20;
-    maintainers = [ ];
+    maintainers = with maintainers; [ stephen-huan ];
   };
 }
