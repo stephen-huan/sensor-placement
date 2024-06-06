@@ -8,12 +8,12 @@ from .sensor import (
     mi_prec,
 )
 
-(
-    entropy_chol,
-    entropy_naive,
-    entropy_prec,
-    entropy_prechol,
-    mi_chol,
-    mi_naive,
-    mi_prec,
-)  # pyright: ignore [reportUnusedExpression]
+__all__ = [
+    "entropy_chol",
+    "entropy_naive",
+    "entropy_prec",
+    "entropy_prechol",
+    "mi_chol",
+    "mi_naive",
+    "mi_prec",
+]

@@ -1,3 +1,3 @@
 from .jaxsensor import entropy, mi
 
-(entropy, mi)  # pyright: ignore [reportUnusedExpression]
+__all__ = ["entropy", 'mi']
