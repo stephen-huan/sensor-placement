@@ -1,9 +1,12 @@
 {
-  description = "sensor-placement";
+  description = "Information-theoretic sensor placement";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.follows = "maipkgs/nixpkgs";
+    maipkgs.url = "github:stephen-huan/maipkgs";
+  };
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, maipkgs }:
     let
       inherit (nixpkgs) lib;
       systems = lib.systems.flakeExposed;
@@ -13,8 +16,7 @@
     eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        packages = import ./pkgs { inherit pkgs; };
-        inherit (self.legacyPackages.${system}) python;
+        inherit (maipkgs.legacyPackages.${system}) python;
         python' = python.withPackages (ps: with ps; [
           cython
           gpjax
@@ -25,28 +27,9 @@
           setuptools
         ]);
         formatters = [ pkgs.black pkgs.isort pkgs.nixpkgs-fmt ];
-        linters = [ pkgs.nodePackages.pyright pkgs.ruff pkgs.statix ];
+        linters = [ pkgs.pyright pkgs.ruff pkgs.statix ];
       in
       {
-        legacyPackages.${system} = rec {
-          # https://nixos.org/manual/nixpkgs/stable/#overriding-python-packages
-          python = packages.python.override {
-            packageOverrides = final: prev: packages;
-            self = python;
-          };
-          python3Packages = packages // { inherit python; };
-        };
-
-        packages.${system} = {
-          inherit (packages)
-            cola-ml
-            cola-plum-dispatch
-            gpjax
-            optree
-            pytreeclass
-            simple-pytree;
-        };
-
         formatter.${system} = pkgs.writeShellApplication {
           name = "formatter";
           runtimeInputs = formatters;
