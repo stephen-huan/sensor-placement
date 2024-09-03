@@ -5,6 +5,7 @@ import jax.numpy as jnp
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
+from flax import nnx
 from gpjax import kernels as jaxkernels
 
 import jaxsensor
@@ -69,7 +70,7 @@ if __name__ == "__main__":
     rng = np.random.default_rng(1)
 
     kernel = kernels.Matern(length_scale=1, nu=5 / 2)
-    jaxkernel = jaxkernels.Matern52(lengthscale=1)
+    jaxkernel = nnx.split(jaxkernels.Matern52(lengthscale=1))
     X = rng.random((100, 2))
     s = 75
 

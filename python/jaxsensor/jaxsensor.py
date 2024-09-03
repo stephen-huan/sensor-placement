@@ -4,9 +4,12 @@ from typing import TypeAlias
 
 import jax
 import jax.numpy as jnp
-from gpjax.kernels import AbstractKernel, DenseKernelComputation
+from flax import nnx
+from gpjax.kernels import DenseKernelComputation
 from jax import Array, lax
 from jax.numpy.linalg import inv
+
+Kernel = tuple[nnx.GraphDef, nnx.State]
 
 dense = DenseKernelComputation()
 cross_covariance = dense.cross_covariance
@@ -59,8 +62,9 @@ def __chol_update(
 
 
 @partial(jit, static_argnums=2)
-def entropy(x: Array, kernel: AbstractKernel, s: int) -> Array:
+def entropy(x: Array, kernel: Kernel, s: int) -> Array:
     """Greedily select the s most entropic points from x."""
+    kernel = nnx.merge(*kernel)
     n = x.shape[0]
     s = min(s, n)
     # initialization
@@ -91,8 +95,9 @@ def entropy(x: Array, kernel: AbstractKernel, s: int) -> Array:
 
 
 @partial(jit, static_argnums=2)
-def mi(x: Array, kernel: AbstractKernel, s: int) -> Array:
+def mi(x: Array, kernel: Kernel, s: int) -> Array:
     """Greedily select the s most informative points from x."""
+    kernel = nnx.merge(*kernel)
     n = x.shape[0]
     s = min(s, n)
     # initialization
