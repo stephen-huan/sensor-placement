@@ -44,7 +44,7 @@
           name = "lint";
           src = ./.;
           doCheck = true;
-          nativeCheckInputs = formatters ++ linters ++ lib.singleton python';
+          nativeCheckInputs = lib.singleton python' ++ formatters ++ linters;
           checkPhase = ''
             isort --check --diff .
             black --check --diff .
@@ -58,7 +58,6 @@
 
         devShells.${system}.default = pkgs.mkShell {
           packages = [
-            pkgs.nix-update
             python'
             # pkgs.mkl
           ]
