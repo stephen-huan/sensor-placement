@@ -17,6 +17,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         inherit (maipkgs.legacyPackages.${system}) python;
+        pythonPackages = pkgs.python311Packages;
         python' = python.withPackages (ps: with ps; [
           cython
           gpjax
@@ -26,8 +27,12 @@
           scikit-learn
           setuptools
         ]);
-        formatters = [ pkgs.black pkgs.isort pkgs.nixpkgs-fmt ];
-        linters = [ pkgs.pyright pkgs.ruff pkgs.statix ];
+        formatters = [
+          pythonPackages.black
+          pythonPackages.isort
+          pkgs.nixpkgs-fmt
+        ];
+        linters = [ pkgs.pyright pythonPackages.ruff pkgs.statix ];
       in
       {
         formatter.${system} = pkgs.writeShellApplication {
