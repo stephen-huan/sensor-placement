@@ -59,7 +59,7 @@
         devShells.${system}.default = pkgs.mkShell {
           packages = [
             python'
-            # pkgs.mkl
+            pkgs.mkl
           ]
           ++ formatters
           ++ linters;
