@@ -23,8 +23,8 @@
           gpjax
           jax
           jaxlib
-          matplotlib
           scikit-learn
+          seaborn
           setuptools
         ]);
         formatters = [
